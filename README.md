@@ -1,4 +1,4 @@
-# Particulate matter sensor (luftdaten.info) Grafana Dashboard
+# Particulate matter sensor ([luftdaten.info](https://github.com/opendata-stuttgart/meta)) Grafana Dashboard
 
 This project provides Docker based monitoring for your [luftdaten.info](https://github.com/opendata-stuttgart/meta) particulate matter sensor.
 
