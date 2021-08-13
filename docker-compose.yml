@@ -1,0 +1,39 @@
+version: "3.9"
+
+volumes:
+  grafana_data: {}                  # Persist Grafana data
+  influxdb_data: {}                 # Persist InfluxDB data
+
+services:
+  influxdb:
+    image: influxdb:1.8.4
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+      - "8088:8088"
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+      - ./init.iql:/docker-entrypoint-initdb.d/init.iql   # Every .sh or .iql file inside docker-entrypoint-initdb.d is executed by the Container on first boot
+    environment:
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+
+  grafana:
+    image: grafana/grafana:8.0.4
+    container_name: grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    environment:
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+      - 80:3000
+    networks:
+      - default
+    labels:
+      org.label-schema.group: "monitoring"
