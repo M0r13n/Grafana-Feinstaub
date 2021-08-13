@@ -24,6 +24,11 @@ git clone TBD
 # Head into the repo
 cd grafana-feinstaub
 
+# Optional: Change InfluxDB credentials
+# Edit ./env file and change INFLUXDB_USERNAME or INFLUXDB_PASSWORD
+# Change ./grafana/provisioning/datasources/datasource.yml and add the same credentials
+
+
 # Start the services (this may take a while)
 docker-compose up -d
 ```
@@ -32,9 +37,11 @@ After that the following services are running:
 
 1. Grafana
     - Accessible at `http://<YOUR_MACHINE_IP>:3000`
+    - Login with `admin`:`admin`
 2. InfluxDB
     - Accessible at `http://<YOUR_MACHINE_IP>:8086`
     - By default a new database `sensorcommunity` is created that is also already available as a datasource in Grafana
+    - Base credentials are `admin`:`admin`
 
 #### Setup particulate sensor
 
@@ -42,7 +49,7 @@ After that the following services are running:
 2. Open the `configuration` tab
 3. Open the `API` tab
 4. Check the checkbox `send data to InfluxDB` (uncheck HTTPS)
-5. Change the server to match the IP of your PI.
+5. Change the server to match the IP of your PI. Add InfluxDB credentials (default `admin`:`admin`)
 6. Click `save and reboot`
 
 Your sensor should now start sending data to your local InfluxDB (it still continues to send it's data to all other APIs).

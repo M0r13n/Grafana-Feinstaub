@@ -5,7 +5,9 @@ datasources:
     type: influxdb
     access: proxy
     url: http://influxdb:8086
-    basicAuth: false
     isDefault: true
     editable: true
     database: sensorcommunity
+    basicAuth: true
+    basicAuthUser: admin
+    basicAuthPassword: admin

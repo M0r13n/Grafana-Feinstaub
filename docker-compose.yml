@@ -8,6 +8,7 @@ services:
   influxdb:
     image: influxdb:1.8.4
     container_name: influxdb
+    restart: unless-stopped
     ports:
       - "8086:8086"
       - "8088:8088"
@@ -15,8 +16,9 @@ services:
       - influxdb_data:/var/lib/influxdb
       - ./init.iql:/docker-entrypoint-initdb.d/init.iql   # Every .sh or .iql file inside docker-entrypoint-initdb.d is executed by the Container on first boot
     environment:
-      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
-      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+      - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}        # Defined in .env
+      - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}    # Defined in .env
 
   grafana:
     image: grafana/grafana:8.0.4
@@ -26,8 +28,8 @@ services:
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     environment:
-      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}           # Can be empty, will be changed on first login anyway
+      - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}   # Can be empty, will be changed on first login anyway
       - GF_USERS_ALLOW_SIGN_UP=false
     restart: unless-stopped
     ports:
